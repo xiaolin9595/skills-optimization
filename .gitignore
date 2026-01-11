@@ -1,16 +1,9 @@
-# macOS
-.DS_Store
-._*
-.Spotlight-V100
-.Trashes
-
 # Python
 __pycache__/
 *.py[cod]
 *$py.class
 *.so
 .Python
-env/
 build/
 develop-eggs/
 dist/
@@ -26,12 +19,27 @@ wheels/
 *.egg-info/
 .installed.cfg
 *.egg
-.pytest_cache/
+MANIFEST
 
-# Logs and Experiments
+# Virtual Env
+venv/
+.env
+env/
+
+# IDEs
+.idea/
+.vscode/
+
+# Project specific
 *.log
-experiments/**
-**/logs/**
+.coverage
+htmlcov/
+referenceSolution/
+*.txt
+.DS_Store
+._*
+.ipynb_checkpoints/
+*.pt
+*.bin
+*.safetensors
 
-# OpenSpec
-openspec/changes/archive/
