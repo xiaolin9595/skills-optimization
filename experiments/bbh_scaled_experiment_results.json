@@ -1,0 +1,1231 @@
+{
+  "experiment_type": "scaled",
+  "timestamp": "2026-01-15T07:16:35.802245",
+  "original_skill": " proper logical reasoning and think step by step. Finally give the actual correct answer.",
+  "optimized_skill": "                      .7 = (answer (answer question just show ).1 (no extra formatting $0 = False$",
+  "original_accuracy": 0.65,
+  "optimized_accuracy": 0.67,
+  "improvement": 0.020000000000000018,
+  "improvement_percentage": "+2.0%",
+  "optimization_time_seconds": 1777.2092564105988,
+  "total_time_seconds": 2016.4219262599945,
+  "optimization_metrics": {
+    "final_loss": 0.441162109375
+  },
+  "config": {
+    "num_examples": 50,
+    "batch_size": 8,
+    "iterations": 25,
+    "start_len": 16,
+    "end_len": 20,
+    "top_k": 20,
+    "top_mu": 10,
+    "patience": 5,
+    "control_weight": 0.15
+  },
+  "evaluation_samples": 100,
+  "original_results": [
+    {
+      "input": "not ( True ) and ( True ) is",
+      "predicted": "False",
+      "ground_truth": "False",
+      "correct": true
+    },
+    {
+      "input": "True and not not ( not False ) is",
+      "predicted": "True",
+      "ground_truth": "True",
+      "correct": true
+    },
+    {
+      "input": "not True or False or ( False ) is",
+      "predicted": "False",
+      "ground_truth": "False",
+      "correct": true
+    },
+    {
+      "input": "False or not ( True ) and False is",
+      "predicted": "False",
+      "ground_truth": "False",
+      "correct": true
+    },
+    {
+      "input": "True or not False and True and False is",
+      "predicted": "False",
+      "ground_truth": "True",
+      "correct": false
+    },
+    {
+      "input": "False or not not not False and True is",
+      "predicted": "True",
+      "ground_truth": "True",
+      "correct": true
+    },
+    {
+      "input": "not True and ( False or True ) is",
+      "predicted": "False",
+      "ground_truth": "False",
+      "correct": true
+    },
+    {
+      "input": "True and not False or ( True ) is",
+      "predicted": "True",
+      "ground_truth": "True",
+      "correct": true
+    },
+    {
+      "input": "not True or ( False and True ) is",
+      "predicted": "False",
+      "ground_truth": "False",
+      "correct": true
+    },
+    {
+      "input": "not True or ( True or False ) is",
+      "predicted": "False",
+      "ground_truth": "True",
+      "correct": false
+    },
+    {
+      "input": "False or ( False ) and not False is",
+      "predicted": "False",
+      "ground_truth": "False",
+      "correct": true
+    },
+    {
+      "input": "not False or True and False and False is",
+      "predicted": "False",
+      "ground_truth": "True",
+      "correct": false
+    },
+    {
+      "input": "not True or False or not not True is",
+      "predicted": "False",
+      "ground_truth": "True",
+      "correct": false
+    },
+    {
+      "input": "True and True and False and not True is",
+      "predicted": "False",
+      "ground_truth": "False",
+      "correct": true
+    },
+    {
+      "input": "not not True and not True or True is",
+      "predicted": "False",
+      "ground_truth": "True",
+      "correct": false
+    },
+    {
+      "input": "not not not ( True and False ) is",
+      "predicted": "False",
+      "ground_truth": "True",
+      "correct": false
+    },
+    {
+      "input": "not not False and not not not False is",
+      "predicted": "True",
+      "ground_truth": "False",
+      "correct": false
+    },
+    {
+      "input": "( True and not True and False ) is",
+      "predicted": "False",
+      "ground_truth": "False",
+      "correct": true
+    },
+    {
+      "input": "False and False and False or not False is",
+      "predicted": "True",
+      "ground_truth": "True",
+      "correct": true
+    },
+    {
+      "input": "False or ( False and not False ) is",
+      "predicted": "False",
+      "ground_truth": "False",
+      "correct": true
+    },
+    {
+      "input": "True and False or ( not True ) is",
+      "predicted": "False",
+      "ground_truth": "False",
+      "correct": true
+    },
+    {
+      "input": "not not ( True ) and not False is",
+      "predicted": "True",
+      "ground_truth": "True",
+      "correct": true
+    },
+    {
+      "input": "not False or ( True ) and True is",
+      "predicted": "True",
+      "ground_truth": "True",
+      "correct": true
+    },
+    {
+      "input": "not ( True ) or False or True is",
+      "predicted": "False",
+      "ground_truth": "True",
+      "correct": false
+    },
+    {
+      "input": "( True and not not not True ) is",
+      "predicted": "True",
+      "ground_truth": "False",
+      "correct": false
+    },
+    {
+      "input": "( False or not False or False ) is",
+      "predicted": "True",
+      "ground_truth": "True",
+      "correct": true
+    },
+    {
+      "input": "False and False or True and not False is",
+      "predicted": "False",
+      "ground_truth": "True",
+      "correct": false
+    },
+    {
+      "input": "not not False or not False or True is",
+      "predicted": "True",
+      "ground_truth": "True",
+      "correct": true
+    },
+    {
+      "input": "True and not True or False or True is",
+      "predicted": "True",
+      "ground_truth": "True",
+      "correct": true
+    },
+    {
+      "input": "not False or True and False or False is",
+      "predicted": "False",
+      "ground_truth": "True",
+      "correct": false
+    },
+    {
+      "input": "False and ( not False ) or False is",
+      "predicted": "False",
+      "ground_truth": "False",
+      "correct": true
+    },
+    {
+      "input": "not not not not ( not False ) is",
+      "predicted": "True",
+      "ground_truth": "True",
+      "correct": true
+    },
+    {
+      "input": "( True ) and True or not True is",
+      "predicted": "True",
+      "ground_truth": "True",
+      "correct": true
+    },
+    {
+      "input": "not True or False and False and False is",
+      "predicted": "False",
+      "ground_truth": "False",
+      "correct": true
+    },
+    {
+      "input": "not not not not not not not False is",
+      "predicted": "True",
+      "ground_truth": "True",
+      "correct": true
+    },
+    {
+      "input": "not True or not False and not False is",
+      "predicted": "False",
+      "ground_truth": "True",
+      "correct": false
+    },
+    {
+      "input": "False or True or False and not False is",
+      "predicted": "False",
+      "ground_truth": "True",
+      "correct": false
+    },
+    {
+      "input": "not ( True or True ) and False is",
+      "predicted": "False",
+      "ground_truth": "False",
+      "correct": true
+    },
+    {
+      "input": "not not not not True and not True is",
+      "predicted": "False",
+      "ground_truth": "False",
+      "correct": true
+    },
+    {
+      "input": "( False ) or False and not True is",
+      "predicted": "False",
+      "ground_truth": "False",
+      "correct": true
+    },
+    {
+      "input": "( False and True or not False ) is",
+      "predicted": "False",
+      "ground_truth": "True",
+      "correct": false
+    },
+    {
+      "input": "not not not ( False and True ) is",
+      "predicted": "False",
+      "ground_truth": "True",
+      "correct": false
+    },
+    {
+      "input": "not not True and not False or True is",
+      "predicted": "True",
+      "ground_truth": "True",
+      "correct": true
+    },
+    {
+      "input": "not False or True and not not True is",
+      "predicted": "False",
+      "ground_truth": "True",
+      "correct": false
+    },
+    {
+      "input": "True or True or not False or False is",
+      "predicted": "True",
+      "ground_truth": "True",
+      "correct": true
+    },
+    {
+      "input": "( not False and False and False ) is",
+      "predicted": "True",
+      "ground_truth": "False",
+      "correct": false
+    },
+    {
+      "input": "( ( not True ) or True ) is",
+      "predicted": "False",
+      "ground_truth": "True",
+      "correct": false
+    },
+    {
+      "input": "not not ( not False or True ) is",
+      "predicted": "True",
+      "ground_truth": "True",
+      "correct": true
+    },
+    {
+      "input": "not True or False or ( True ) is",
+      "predicted": "False",
+      "ground_truth": "True",
+      "correct": false
+    },
+    {
+      "input": "False or ( not False ) and True is",
+      "predicted": "True",
+      "ground_truth": "True",
+      "correct": true
+    },
+    {
+      "input": "not False or False or ( False ) is",
+      "predicted": "True",
+      "ground_truth": "True",
+      "correct": true
+    },
+    {
+      "input": "not not False or False and not True is",
+      "predicted": "True",
+      "ground_truth": "False",
+      "correct": false
+    },
+    {
+      "input": "True or ( ( not True ) ) is",
+      "predicted": "False",
+      "ground_truth": "True",
+      "correct": false
+    },
+    {
+      "input": "not False and not False and not False is",
+      "predicted": "True",
+      "ground_truth": "True",
+      "correct": true
+    },
+    {
+      "input": "( False ) and not False and True is",
+      "predicted": "False",
+      "ground_truth": "False",
+      "correct": true
+    },
+    {
+      "input": "( True ) and False or not False is",
+      "predicted": "False",
+      "ground_truth": "True",
+      "correct": false
+    },
+    {
+      "input": "( not False and ( True ) ) is",
+      "predicted": "True",
+      "ground_truth": "True",
+      "correct": true
+    },
+    {
+      "input": "False or not ( False ) or True is",
+      "predicted": "False",
+      "ground_truth": "True",
+      "correct": false
+    },
+    {
+      "input": "True and not False and not not True is",
+      "predicted": "True",
+      "ground_truth": "True",
+      "correct": true
+    },
+    {
+      "input": "not True and True and True or False is",
+      "predicted": "False",
+      "ground_truth": "False",
+      "correct": true
+    },
+    {
+      "input": "not not ( False and not True ) is",
+      "predicted": "False",
+      "ground_truth": "False",
+      "correct": true
+    },
+    {
+      "input": "True or not ( ( False ) ) is",
+      "predicted": "True",
+      "ground_truth": "True",
+      "correct": true
+    },
+    {
+      "input": "False or not True or False or False is",
+      "predicted": "False",
+      "ground_truth": "False",
+      "correct": true
+    },
+    {
+      "input": "False or not not True or not False is",
+      "predicted": "False",
+      "ground_truth": "True",
+      "correct": false
+    },
+    {
+      "input": "not ( True or True or False ) is",
+      "predicted": "False",
+      "ground_truth": "False",
+      "correct": true
+    },
+    {
+      "input": "False or not not not not not False is",
+      "predicted": "True",
+      "ground_truth": "True",
+      "correct": true
+    },
+    {
+      "input": "not ( False ) or not not True is",
+      "predicted": "True",
+      "ground_truth": "True",
+      "correct": true
+    },
+    {
+      "input": "True and not False or False and False is",
+      "predicted": "True",
+      "ground_truth": "True",
+      "correct": true
+    },
+    {
+      "input": "True or ( not ( True ) ) is",
+      "predicted": "False",
+      "ground_truth": "True",
+      "correct": false
+    },
+    {
+      "input": "( False or True and not True ) is",
+      "predicted": "True",
+      "ground_truth": "False",
+      "correct": false
+    },
+    {
+      "input": "False or not True and True or True is",
+      "predicted": "False",
+      "ground_truth": "True",
+      "correct": false
+    },
+    {
+      "input": "not not not not not not not True is",
+      "predicted": "False",
+      "ground_truth": "False",
+      "correct": true
+    },
+    {
+      "input": "( not False ) and False or True is",
+      "predicted": "True",
+      "ground_truth": "True",
+      "correct": true
+    },
+    {
+      "input": "False and False or not ( True ) is",
+      "predicted": "False",
+      "ground_truth": "False",
+      "correct": true
+    },
+    {
+      "input": "( not False or True ) and True is",
+      "predicted": "True",
+      "ground_truth": "True",
+      "correct": true
+    },
+    {
+      "input": "not ( False ) and ( False ) is",
+      "predicted": "True",
+      "ground_truth": "False",
+      "correct": false
+    },
+    {
+      "input": "False or True and not not not False is",
+      "predicted": "False",
+      "ground_truth": "True",
+      "correct": false
+    },
+    {
+      "input": "( True ) and True and not True is",
+      "predicted": "False",
+      "ground_truth": "False",
+      "correct": true
+    },
+    {
+      "input": "( not True ) and True and False is",
+      "predicted": "False",
+      "ground_truth": "False",
+      "correct": true
+    },
+    {
+      "input": "( not not True and not False ) is",
+      "predicted": "True",
+      "ground_truth": "True",
+      "correct": true
+    },
+    {
+      "input": "True and ( False ) or not False is",
+      "predicted": "True",
+      "ground_truth": "True",
+      "correct": true
+    },
+    {
+      "input": "not not not False or False and False is",
+      "predicted": "True",
+      "ground_truth": "True",
+      "correct": true
+    },
+    {
+      "input": "not not not False and True or False is",
+      "predicted": "True",
+      "ground_truth": "True",
+      "correct": true
+    },
+    {
+      "input": "True or ( True or not False ) is",
+      "predicted": "True",
+      "ground_truth": "True",
+      "correct": true
+    },
+    {
+      "input": "not False or ( ( False ) ) is",
+      "predicted": "True",
+      "ground_truth": "True",
+      "correct": true
+    },
+    {
+      "input": "not not ( False and not False ) is",
+      "predicted": "True",
+      "ground_truth": "False",
+      "correct": false
+    },
+    {
+      "input": "not not not not True or not True is",
+      "predicted": "False",
+      "ground_truth": "True",
+      "correct": false
+    },
+    {
+      "input": "False and not ( False or False ) is",
+      "predicted": "False",
+      "ground_truth": "False",
+      "correct": true
+    },
+    {
+      "input": "True and True and True or not False is",
+      "predicted": "True",
+      "ground_truth": "True",
+      "correct": true
+    },
+    {
+      "input": "False or not False or True and True is",
+      "predicted": "False",
+      "ground_truth": "True",
+      "correct": false
+    },
+    {
+      "input": "not False and False and False or False is",
+      "predicted": "False",
+      "ground_truth": "False",
+      "correct": true
+    },
+    {
+      "input": "( False ) or not False or True is",
+      "predicted": "False",
+      "ground_truth": "True",
+      "correct": false
+    },
+    {
+      "input": "( not False ) or ( True ) is",
+      "predicted": "True",
+      "ground_truth": "True",
+      "correct": true
+    },
+    {
+      "input": "not not ( False or not True ) is",
+      "predicted": "True",
+      "ground_truth": "False",
+      "correct": false
+    },
+    {
+      "input": "False or not False or False or False is",
+      "predicted": "False",
+      "ground_truth": "True",
+      "correct": false
+    },
+    {
+      "input": "False or not False and ( False ) is",
+      "predicted": "False",
+      "ground_truth": "False",
+      "correct": true
+    },
+    {
+      "input": "False or ( False ) or not True is",
+      "predicted": "False",
+      "ground_truth": "False",
+      "correct": true
+    },
+    {
+      "input": "not True or False and True and True is",
+      "predicted": "False",
+      "ground_truth": "False",
+      "correct": true
+    },
+    {
+      "input": "True or ( True or not True ) is",
+      "predicted": "True",
+      "ground_truth": "True",
+      "correct": true
+    },
+    {
+      "input": "True and not False and True or True is",
+      "predicted": "True",
+      "ground_truth": "True",
+      "correct": true
+    }
+  ],
+  "optimized_results": [
+    {
+      "input": "not ( True ) and ( True ) is",
+      "predicted": "True",
+      "ground_truth": "False",
+      "correct": false
+    },
+    {
+      "input": "True and not not ( not False ) is",
+      "predicted": "True",
+      "ground_truth": "True",
+      "correct": true
+    },
+    {
+      "input": "not True or False or ( False ) is",
+      "predicted": "True",
+      "ground_truth": "False",
+      "correct": false
+    },
+    {
+      "input": "False or not ( True ) and False is",
+      "predicted": "True",
+      "ground_truth": "False",
+      "correct": false
+    },
+    {
+      "input": "True or not False and True and False is",
+      "predicted": "False",
+      "ground_truth": "True",
+      "correct": false
+    },
+    {
+      "input": "False or not not not False and True is",
+      "predicted": "True",
+      "ground_truth": "True",
+      "correct": true
+    },
+    {
+      "input": "not True and ( False or True ) is",
+      "predicted": "False",
+      "ground_truth": "False",
+      "correct": true
+    },
+    {
+      "input": "True and not False or ( True ) is",
+      "predicted": "True",
+      "ground_truth": "True",
+      "correct": true
+    },
+    {
+      "input": "not True or ( False and True ) is",
+      "predicted": "True",
+      "ground_truth": "False",
+      "correct": false
+    },
+    {
+      "input": "not True or ( True or False ) is",
+      "predicted": "False",
+      "ground_truth": "True",
+      "correct": false
+    },
+    {
+      "input": "False or ( False ) and not False is",
+      "predicted": "True",
+      "ground_truth": "False",
+      "correct": false
+    },
+    {
+      "input": "not False or True and False and False is",
+      "predicted": "True",
+      "ground_truth": "True",
+      "correct": true
+    },
+    {
+      "input": "not True or False or not not True is",
+      "predicted": "True",
+      "ground_truth": "True",
+      "correct": true
+    },
+    {
+      "input": "True and True and False and not True is",
+      "predicted": "False",
+      "ground_truth": "False",
+      "correct": true
+    },
+    {
+      "input": "not not True and not True or True is",
+      "predicted": "True",
+      "ground_truth": "True",
+      "correct": true
+    },
+    {
+      "input": "not not not ( True and False ) is",
+      "predicted": "True",
+      "ground_truth": "True",
+      "correct": true
+    },
+    {
+      "input": "not not False and not not not False is",
+      "predicted": "True",
+      "ground_truth": "False",
+      "correct": false
+    },
+    {
+      "input": "( True and not True and False ) is",
+      "predicted": "False",
+      "ground_truth": "False",
+      "correct": true
+    },
+    {
+      "input": "False and False and False or not False is",
+      "predicted": "True",
+      "ground_truth": "True",
+      "correct": true
+    },
+    {
+      "input": "False or ( False and not False ) is",
+      "predicted": "True",
+      "ground_truth": "False",
+      "correct": false
+    },
+    {
+      "input": "True and False or ( not True ) is",
+      "predicted": "True",
+      "ground_truth": "False",
+      "correct": false
+    },
+    {
+      "input": "not not ( True ) and not False is",
+      "predicted": "True",
+      "ground_truth": "True",
+      "correct": true
+    },
+    {
+      "input": "not False or ( True ) and True is",
+      "predicted": "True",
+      "ground_truth": "True",
+      "correct": true
+    },
+    {
+      "input": "not ( True ) or False or True is",
+      "predicted": "True",
+      "ground_truth": "True",
+      "correct": true
+    },
+    {
+      "input": "( True and not not not True ) is",
+      "predicted": "True",
+      "ground_truth": "False",
+      "correct": false
+    },
+    {
+      "input": "( False or not False or False ) is",
+      "predicted": "True",
+      "ground_truth": "True",
+      "correct": true
+    },
+    {
+      "input": "False and False or True and not False is",
+      "predicted": "True",
+      "ground_truth": "True",
+      "correct": true
+    },
+    {
+      "input": "not not False or not False or True is",
+      "predicted": "True",
+      "ground_truth": "True",
+      "correct": true
+    },
+    {
+      "input": "True and not True or False or True is",
+      "predicted": "True",
+      "ground_truth": "True",
+      "correct": true
+    },
+    {
+      "input": "not False or True and False or False is",
+      "predicted": "True",
+      "ground_truth": "True",
+      "correct": true
+    },
+    {
+      "input": "False and ( not False ) or False is",
+      "predicted": "True",
+      "ground_truth": "False",
+      "correct": false
+    },
+    {
+      "input": "not not not not ( not False ) is",
+      "predicted": "True",
+      "ground_truth": "True",
+      "correct": true
+    },
+    {
+      "input": "( True ) and True or not True is",
+      "predicted": "True",
+      "ground_truth": "True",
+      "correct": true
+    },
+    {
+      "input": "not True or False and False and False is",
+      "predicted": "False",
+      "ground_truth": "False",
+      "correct": true
+    },
+    {
+      "input": "not not not not not not not False is",
+      "predicted": "True",
+      "ground_truth": "True",
+      "correct": true
+    },
+    {
+      "input": "not True or not False and not False is",
+      "predicted": "True",
+      "ground_truth": "True",
+      "correct": true
+    },
+    {
+      "input": "False or True or False and not False is",
+      "predicted": "True",
+      "ground_truth": "True",
+      "correct": true
+    },
+    {
+      "input": "not ( True or True ) and False is",
+      "predicted": "True",
+      "ground_truth": "False",
+      "correct": false
+    },
+    {
+      "input": "not not not not True and not True is",
+      "predicted": "True",
+      "ground_truth": "False",
+      "correct": false
+    },
+    {
+      "input": "( False ) or False and not True is",
+      "predicted": "True",
+      "ground_truth": "False",
+      "correct": false
+    },
+    {
+      "input": "( False and True or not False ) is",
+      "predicted": "True",
+      "ground_truth": "True",
+      "correct": true
+    },
+    {
+      "input": "not not not ( False and True ) is",
+      "predicted": "True",
+      "ground_truth": "True",
+      "correct": true
+    },
+    {
+      "input": "not not True and not False or True is",
+      "predicted": "True",
+      "ground_truth": "True",
+      "correct": true
+    },
+    {
+      "input": "not False or True and not not True is",
+      "predicted": "True",
+      "ground_truth": "True",
+      "correct": true
+    },
+    {
+      "input": "True or True or not False or False is",
+      "predicted": "True",
+      "ground_truth": "True",
+      "correct": true
+    },
+    {
+      "input": "( not False and False and False ) is",
+      "predicted": "True",
+      "ground_truth": "False",
+      "correct": false
+    },
+    {
+      "input": "( ( not True ) or True ) is",
+      "predicted": "True",
+      "ground_truth": "True",
+      "correct": true
+    },
+    {
+      "input": "not not ( not False or True ) is",
+      "predicted": "True",
+      "ground_truth": "True",
+      "correct": true
+    },
+    {
+      "input": "not True or False or ( True ) is",
+      "predicted": "False",
+      "ground_truth": "True",
+      "correct": false
+    },
+    {
+      "input": "False or ( not False ) and True is",
+      "predicted": "True",
+      "ground_truth": "True",
+      "correct": true
+    },
+    {
+      "input": "not False or False or ( False ) is",
+      "predicted": "True",
+      "ground_truth": "True",
+      "correct": true
+    },
+    {
+      "input": "not not False or False and not True is",
+      "predicted": "True",
+      "ground_truth": "False",
+      "correct": false
+    },
+    {
+      "input": "True or ( ( not True ) ) is",
+      "predicted": "True",
+      "ground_truth": "True",
+      "correct": true
+    },
+    {
+      "input": "not False and not False and not False is",
+      "predicted": "True",
+      "ground_truth": "True",
+      "correct": true
+    },
+    {
+      "input": "( False ) and not False and True is",
+      "predicted": "True",
+      "ground_truth": "False",
+      "correct": false
+    },
+    {
+      "input": "( True ) and False or not False is",
+      "predicted": "True",
+      "ground_truth": "True",
+      "correct": true
+    },
+    {
+      "input": "( not False and ( True ) ) is",
+      "predicted": "True",
+      "ground_truth": "True",
+      "correct": true
+    },
+    {
+      "input": "False or not ( False ) or True is",
+      "predicted": "True",
+      "ground_truth": "True",
+      "correct": true
+    },
+    {
+      "input": "True and not False and not not True is",
+      "predicted": "True",
+      "ground_truth": "True",
+      "correct": true
+    },
+    {
+      "input": "not True and True and True or False is",
+      "predicted": "False",
+      "ground_truth": "False",
+      "correct": true
+    },
+    {
+      "input": "not not ( False and not True ) is",
+      "predicted": "True",
+      "ground_truth": "False",
+      "correct": false
+    },
+    {
+      "input": "True or not ( ( False ) ) is",
+      "predicted": "True",
+      "ground_truth": "True",
+      "correct": true
+    },
+    {
+      "input": "False or not True or False or False is",
+      "predicted": "False",
+      "ground_truth": "False",
+      "correct": true
+    },
+    {
+      "input": "False or not not True or not False is",
+      "predicted": "True",
+      "ground_truth": "True",
+      "correct": true
+    },
+    {
+      "input": "not ( True or True or False ) is",
+      "predicted": "True",
+      "ground_truth": "False",
+      "correct": false
+    },
+    {
+      "input": "False or not not not not not False is",
+      "predicted": "True",
+      "ground_truth": "True",
+      "correct": true
+    },
+    {
+      "input": "not ( False ) or not not True is",
+      "predicted": "True",
+      "ground_truth": "True",
+      "correct": true
+    },
+    {
+      "input": "True and not False or False and False is",
+      "predicted": "True",
+      "ground_truth": "True",
+      "correct": true
+    },
+    {
+      "input": "True or ( not ( True ) ) is",
+      "predicted": "True",
+      "ground_truth": "True",
+      "correct": true
+    },
+    {
+      "input": "( False or True and not True ) is",
+      "predicted": "True",
+      "ground_truth": "False",
+      "correct": false
+    },
+    {
+      "input": "False or not True and True or True is",
+      "predicted": "True",
+      "ground_truth": "True",
+      "correct": true
+    },
+    {
+      "input": "not not not not not not not True is",
+      "predicted": "True",
+      "ground_truth": "False",
+      "correct": false
+    },
+    {
+      "input": "( not False ) and False or True is",
+      "predicted": "True",
+      "ground_truth": "True",
+      "correct": true
+    },
+    {
+      "input": "False and False or not ( True ) is",
+      "predicted": "True",
+      "ground_truth": "False",
+      "correct": false
+    },
+    {
+      "input": "( not False or True ) and True is",
+      "predicted": "True",
+      "ground_truth": "True",
+      "correct": true
+    },
+    {
+      "input": "not ( False ) and ( False ) is",
+      "predicted": "True",
+      "ground_truth": "False",
+      "correct": false
+    },
+    {
+      "input": "False or True and not not not False is",
+      "predicted": "True",
+      "ground_truth": "True",
+      "correct": true
+    },
+    {
+      "input": "( True ) and True and not True is",
+      "predicted": "True",
+      "ground_truth": "False",
+      "correct": false
+    },
+    {
+      "input": "( not True ) and True and False is",
+      "predicted": "True",
+      "ground_truth": "False",
+      "correct": false
+    },
+    {
+      "input": "( not not True and not False ) is",
+      "predicted": "True",
+      "ground_truth": "True",
+      "correct": true
+    },
+    {
+      "input": "True and ( False ) or not False is",
+      "predicted": "True",
+      "ground_truth": "True",
+      "correct": true
+    },
+    {
+      "input": "not not not False or False and False is",
+      "predicted": "True",
+      "ground_truth": "True",
+      "correct": true
+    },
+    {
+      "input": "not not not False and True or False is",
+      "predicted": "True",
+      "ground_truth": "True",
+      "correct": true
+    },
+    {
+      "input": "True or ( True or not False ) is",
+      "predicted": "True",
+      "ground_truth": "True",
+      "correct": true
+    },
+    {
+      "input": "not False or ( ( False ) ) is",
+      "predicted": "True",
+      "ground_truth": "True",
+      "correct": true
+    },
+    {
+      "input": "not not ( False and not False ) is",
+      "predicted": "True",
+      "ground_truth": "False",
+      "correct": false
+    },
+    {
+      "input": "not not not not True or not True is",
+      "predicted": "True",
+      "ground_truth": "True",
+      "correct": true
+    },
+    {
+      "input": "False and not ( False or False ) is",
+      "predicted": "False",
+      "ground_truth": "False",
+      "correct": true
+    },
+    {
+      "input": "True and True and True or not False is",
+      "predicted": "True",
+      "ground_truth": "True",
+      "correct": true
+    },
+    {
+      "input": "False or not False or True and True is",
+      "predicted": "True",
+      "ground_truth": "True",
+      "correct": true
+    },
+    {
+      "input": "not False and False and False or False is",
+      "predicted": "True",
+      "ground_truth": "False",
+      "correct": false
+    },
+    {
+      "input": "( False ) or not False or True is",
+      "predicted": "True",
+      "ground_truth": "True",
+      "correct": true
+    },
+    {
+      "input": "( not False ) or ( True ) is",
+      "predicted": "True",
+      "ground_truth": "True",
+      "correct": true
+    },
+    {
+      "input": "not not ( False or not True ) is",
+      "predicted": "True",
+      "ground_truth": "False",
+      "correct": false
+    },
+    {
+      "input": "False or not False or False or False is",
+      "predicted": "True",
+      "ground_truth": "True",
+      "correct": true
+    },
+    {
+      "input": "False or not False and ( False ) is",
+      "predicted": "True",
+      "ground_truth": "False",
+      "correct": false
+    },
+    {
+      "input": "False or ( False ) or not True is",
+      "predicted": "True",
+      "ground_truth": "False",
+      "correct": false
+    },
+    {
+      "input": "not True or False and True and True is",
+      "predicted": "True",
+      "ground_truth": "False",
+      "correct": false
+    },
+    {
+      "input": "True or ( True or not True ) is",
+      "predicted": "True",
+      "ground_truth": "True",
+      "correct": true
+    },
+    {
+      "input": "True and not False and True or True is",
+      "predicted": "True",
+      "ground_truth": "True",
+      "correct": true
+    }
+  ]
+}

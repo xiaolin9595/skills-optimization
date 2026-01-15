@@ -23,6 +23,11 @@ class OptimizeConfig(BaseModel):
     dataset_path: Optional[str] = Field(None, description="Path to input dataset (jsonl)")
     num_examples: int = Field(5, description="Number of examples to load from dataset")
     extract_prompt: Optional[str] = Field("Therefore, the answer is", description="Prompt to induce final answer expectation")
+    
+    # Gradient Stability
+    grad_clip: float = Field(1.0, description="Gradient clipping threshold for numerical stability")
+    use_amp: bool = Field(False, description="Whether to use automatic mixed precision training")
+    grad_norm_epsilon: float = Field(1e-6, description="Epsilon for gradient normalization to avoid division by zero")
 
 from pydantic_settings import BaseSettings, SettingsConfigDict
 

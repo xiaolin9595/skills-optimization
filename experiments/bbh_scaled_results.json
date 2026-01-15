@@ -1,0 +1,17 @@
+{
+  "original_skill": " proper logical reasoning and think step by step. Finally give the actual correct answer.",
+  "optimized_skill": " proper logical reasoning and think step by step. Finally give the actual correct answer. ! ! ! ! ! ! ! ! !",
+  "metrics": {
+    "final_loss": Infinity
+  },
+  "config": {
+    "num_examples": 64,
+    "batch_size": 8,
+    "iterations": 20,
+    "start_len": 20,
+    "end_len": 25,
+    "top_k": 80,
+    "top_mu": 10,
+    "control_weight": 0.1
+  }
+}

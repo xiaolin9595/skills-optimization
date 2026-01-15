@@ -1,63 +1,65 @@
-import logging
+"""
+Debug script to identify the root cause of NaN in gradients
+"""
 import torch
+import logging
 from skill_opt.core.interfaces import Skill
 from skill_opt.core.config import AppConfig, OptimizeConfig
 from skill_opt.optimizer.greater import GreaterOptimizer
 
 # Configure logging
 logging.basicConfig(
-    level=logging.INFO,
+    level=logging.DEBUG,
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
 )
 logger = logging.getLogger(__name__)
 
 def main():
-    # 1. Configuration
     app_config = AppConfig(
-        model_name="/workspace/llama3/Llama-3.2-1B-Instruct"  # Local Llama-3.2-1B-Instruct model
+        model_name="/workspace/llama3/Llama-3.2-1B-Instruct"
     )
     
-    # Official BBH Initial Prompt and Extractor
-    # Note: Llama-3-8B Instruct is recommended for GreaTer experiments
-    # We use boolean_expressions as a representative BBH task.
+    # Minimal configuration for debugging
     optimize_config = OptimizeConfig(
         dataset_path="referenceSolution/GreaTer/data/BBH/boolean_expressions.json",
-        num_examples=16,          # Small batch for validation
-        batch_size=4,
-        iterations=5,             # Short run for verification
-        start_len=20,             # GreaTer usually starts with a fixed length
-        end_len=22,               # Sequential increasing to verify logic
+        num_examples=2,  # Minimal dataset
+        batch_size=1,
+        iterations=1,
+        start_len=20,
+        end_len=20,
         template_name="llama-3",
         extract_prompt="Therefore, the final answer (use exact format: '$ True' or '$ False') is $ ",
-        top_k=40,
-        top_mu=5,
-        patience=2,
-        control_weight=0.2,
-        early_stop_threshold=0.01
+        top_k=10,  # Fewer candidates
+        top_mu=2,
+        patience=1,
+        control_weight=0.0,  # Disable control weight
+        early_stop_threshold=0.01,
+        grad_clip=1.0,
+        use_amp=False,
+        grad_norm_epsilon=1e-6
     )
 
-    # 2. Initial Skill
-    # Official BBH prompt for GreaTer
     bbh_skill = Skill(
         name="BBH-Boolean-Expressions",
         description="Logical reasoning for boolean expressions",
         content=" proper logical reasoning and think step by step. Finally give the actual correct answer."
     )
 
-    # 3. Initialize Optimizer
     try:
         optimizer = GreaterOptimizer(app_config)
     except Exception as e:
         logger.error(f"Failed to initialize optimizer: {e}")
-        logger.info("Falling back to mock initialization for script verification")
-        # In a real environment with GPU and models, this would load normally.
         return
 
-    # 4. Run Optimization
-    logger.info("Starting BBH Optimization...")
+    logger.info("=" * 80)
+    logger.info("DEBUG: Minimal configuration to identify NaN source")
+    logger.info("=" * 80)
+    
     optimized_skill = optimizer.optimize(bbh_skill, optimize_config)
 
+    logger.info("=" * 80)
     logger.info("Optimization Complete!")
+    logger.info("=" * 80)
     logger.info(f"Original Skill: {bbh_skill.content}")
     logger.info(f"Optimized Skill: {optimized_skill.content}")
     logger.info(f"Final Metrics: {optimized_skill.optimization_metrics}")

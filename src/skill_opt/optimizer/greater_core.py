@@ -158,6 +158,10 @@ def generate_reasoning(
         input_ids: Batch of inputs [Batch, Seq] or [Seq].
         decode: If True, returns List[str] of generated text (SKIP special tokens).
         return_only_new: If True, returns only generated tokens.
+        
+    Returns:
+        If decode=True: List[str] - generated texts for each sample in batch
+        If decode=False: torch.Tensor - generated token IDs [Batch, NewLen]
     """
     if device is None:
         device = model.device
@@ -223,15 +227,26 @@ def compute_gradient(
     control_slice: Optional[slice] = None,
     control_weight: float = 0.0,
     focused_target: Optional[torch.Tensor] = None,
-    device: Optional[torch.device] = None
+    device: Optional[torch.device] = None,
+    grad_clip: float = 1.0,
+    use_amp: bool = False
 ) -> torch.Tensor:
     """
     Stage 3: Gradient Calculation
     Backpropagates loss to find gradients for the candidates.
     Implements sparse embedding replacement: One-Hot(Candidates) @ Embeddings.
+    
+    Args:
+        grad_clip: Gradient clipping threshold for numerical stability
+        use_amp: Whether to use automatic mixed precision
     """
     if device is None:
         device = model.device
+        
+    # Enable mixed precision if requested
+    scaler = None
+    if use_amp:
+        scaler = torch.cuda.amp.GradScaler()
         
     # 1. Prepare Embeddings
     embed_weights = get_embedding_matrix(model)
@@ -254,8 +269,18 @@ def compute_gradient(
     # 3. Compute Embeddings with Replacement
     sparse_embed = (one_hot @ candidate_weights).unsqueeze(0) 
     
+    # Check for NaN or Inf in sparse_embed
+    if torch.isnan(sparse_embed).any() or torch.isinf(sparse_embed).any():
+        logger.warning("Sparse embeddings contain NaN or Inf values. Skipping gradient computation.")
+        return torch.zeros_like(one_hot)
+    
     # Get full embeddings for context
     full_embeds_static = get_embeddings(model, context_ids_with_gt.unsqueeze(0)).detach()
+    
+    # Check for NaN or Inf in static embeddings
+    if torch.isnan(full_embeds_static).any() or torch.isinf(full_embeds_static).any():
+        logger.warning("Static embeddings contain NaN or Inf values. Skipping gradient computation.")
+        return torch.zeros_like(one_hot)
     
     # Stitch
     full_embeds = torch.cat([
@@ -264,13 +289,42 @@ def compute_gradient(
         full_embeds_static[:, prompt_pos_idx+1:, :]
     ], dim=1)
     
-    # 4. Forward Pass
-    outputs = model(inputs_embeds=full_embeds)
-    logits = outputs.logits # [1, SeqLen, Vocab]
+    # Check for NaN or Inf in full embeddings
+    if torch.isnan(full_embeds).any() or torch.isinf(full_embeds).any():
+        logger.warning("Full embeddings contain NaN or Inf values after concatenation. Skipping gradient computation.")
+        return torch.zeros_like(one_hot)
+    
+    # 4. Forward Pass with optional AMP
+    try:
+        if use_amp:
+            with torch.cuda.amp.autocast():
+                outputs = model(inputs_embeds=full_embeds)
+                logits = outputs.logits # [1, SeqLen, Vocab]
+        else:
+            outputs = model(inputs_embeds=full_embeds)
+            logits = outputs.logits # [1, SeqLen, Vocab]
+    except Exception as e:
+        logger.warning(f"Forward pass failed with error: {e}. Skipping gradient computation.")
+        return torch.zeros_like(one_hot)
+    
+    # Check for NaN or Inf in logits
+    if torch.isnan(logits).any() or torch.isinf(logits).any():
+        logger.warning(f"Logits contain NaN or Inf values. Shape: {logits.shape}, Max: {logits.max().item():.4f}, Min: {logits.min().item():.4f}. Skipping loss computation.")
+        return torch.zeros_like(one_hot)
     
     loss_fct = nn.CrossEntropyLoss()
     
     # 5. Target Loss (Standard vs Focused)
+    
+    # Debug: print loss_slice and sequence info
+    seq_len = logits.shape[1]
+    context_len = context_ids_with_gt.shape[0]
+    logger.debug(f"Loss computation: loss_slice={loss_slice}, seq_len={seq_len}, context_len={context_len}")
+    
+    # Check if loss_slice is empty (start == stop)
+    if loss_slice.start == loss_slice.stop:
+        logger.warning(f"Empty loss_slice: {loss_slice}. Using full sequence for loss computation.")
+        loss_slice = slice(1, seq_len)  # Use full sequence except first token
     
     if focused_target is not None:
         # Focused Loss Logic
@@ -282,53 +336,83 @@ def compute_gradient(
         # logits[i] predicts token at [i+1]
         # We care about what was predicted within loss_slice
         
-        loss_logits = logits[:, loss_slice.start-1 : loss_slice.stop-1, :] # [1, T, V]
-        window_size = len(focused_target)
-        
-        if loss_logits.shape[1] < window_size:
-            # Fallback to standard Loss on GT if generated text too short
-            shift_logits = logits[0, loss_slice.start-1 : loss_slice.stop-1, :].contiguous()
-            shift_labels = context_ids_with_gt[loss_slice].to(device)
+        # Validate loss_slice indices
+        if loss_slice.start < 1 or loss_slice.stop > seq_len + 1:
+            logger.warning(f"Invalid loss_slice: {loss_slice} for sequence length {seq_len}. Using fallback.")
+            shift_logits = logits[0, 0:-1, :].contiguous()
+            shift_labels = context_ids_with_gt[1:].to(device)
             total_loss = loss_fct(shift_logits, shift_labels)
         else:
-            # Unfold: [1, T-W+1, V, W]
-            unfolded = loss_logits.unfold(1, window_size, 1)
-            # Transpose to [1, T-W+1, W, V] so last dim is Vocab for CrossEntropy
-            unfolded = unfolded.transpose(2, 3) # [1, Windows, WindowSize, Vocab]
+            loss_logits = logits[:, loss_slice.start-1 : loss_slice.stop-1, :] # [1, T, V]
             
-            # Flatten Windows for Batch Processing or iterate
-            # Shapes:
-            # Prediction: [Windows * WindowSize, Vocab]
-            # Target: focused_target repeated for each window
-            
-            num_windows = unfolded.shape[1]
-            flat_preds = unfolded.reshape(-1, unfolded.shape[-1]) # [N_Win * W, V]
-            
-            flat_target = focused_target.repeat(num_windows).to(device) # [N_Win * W]
-            
-            # Compute loss per Token matching
-            # reduction='none' -> [N_Win * W]
-            losses = nn.CrossEntropyLoss(reduction='none')(flat_preds, flat_target)
-            
-            # Reshape to [N_Win, W]
-            losses = losses.view(num_windows, window_size)
-            
-            # Mean loss per window
-            window_losses = losses.mean(dim=1)
-            
-            # Select MINIMUM loss window (best match)
-            min_loss, min_idx = window_losses.min(dim=0), window_losses.argmin(dim=0)
-            total_loss = min_loss
-            
-            # Diagnostic: where did it find the answer?
-            logger.debug(f"Focused Loss: Best match found at window {min_idx.item()} with loss {min_loss.item():.4f}")
+            # Check if loss_logits is empty
+            if loss_logits.shape[1] == 0:
+                logger.warning(f"Empty loss_logits after slicing. Using full sequence.")
+                shift_logits = logits[0, 0:-1, :].contiguous()
+                shift_labels = context_ids_with_gt[1:].to(device)
+                total_loss = loss_fct(shift_logits, shift_labels)
+            else:
+                window_size = len(focused_target)
+                
+                if loss_logits.shape[1] < window_size:
+                    # Fallback to standard Loss on GT if generated text too short
+                    shift_logits = logits[0, loss_slice.start-1 : loss_slice.stop-1, :].contiguous()
+                    shift_labels = context_ids_with_gt[loss_slice].to(device)
+                    total_loss = loss_fct(shift_logits, shift_labels)
+                else:
+                    # Unfold: [1, T-W+1, V, W]
+                    unfolded = loss_logits.unfold(1, window_size, 1)
+                    # Transpose to [1, T-W+1, W, V] so last dim is Vocab for CrossEntropy
+                    unfolded = unfolded.transpose(2, 3) # [1, Windows, WindowSize, Vocab]
+                    
+                    # Flatten Windows for Batch Processing or iterate
+                    # Shapes:
+                    # Prediction: [Windows * WindowSize, Vocab]
+                    # Target: focused_target repeated for each window
+                    
+                    num_windows = unfolded.shape[1]
+                    flat_preds = unfolded.reshape(-1, unfolded.shape[-1]) # [N_Win * W, V]
+                    
+                    flat_target = focused_target.repeat(num_windows).to(device) # [N_Win * W]
+                    
+                    # Compute loss per Token matching
+                    # reduction='none' -> [N_Win * W]
+                    losses = nn.CrossEntropyLoss(reduction='none')(flat_preds, flat_target)
+                    
+                    # Reshape to [N_Win, W]
+                    losses = losses.view(num_windows, window_size)
+                    
+                    # Mean loss per window
+                    window_losses = losses.mean(dim=1)
+                    
+                    # Select MINIMUM loss window (best match)
+                    min_loss_val, min_idx = window_losses.min(dim=0)
+                    total_loss = min_loss_val
+                    
+                    # Diagnostic: where did it find the answer?
+                    logger.debug(f"Focused Loss: Best match found at window {min_idx.item()} with loss {min_loss_val.item():.4f}")
             
     else:
         # Standard Next Token Prediction on GT
-        shift_logits = logits[0, loss_slice.start-1 : loss_slice.stop-1, :].contiguous()
-        shift_labels = context_ids_with_gt[loss_slice].to(device)
-        total_loss = loss_fct(shift_logits, shift_labels)
-        logger.debug(f"Standard Target Loss: {total_loss.item():.4f}")
+        # Validate loss_slice indices
+        if loss_slice.start < 1 or loss_slice.stop > seq_len + 1:
+            logger.warning(f"Invalid loss_slice: {loss_slice} for sequence length {seq_len}. Using fallback.")
+            shift_logits = logits[0, 0:-1, :].contiguous()
+            shift_labels = context_ids_with_gt[1:].to(device)
+            total_loss = loss_fct(shift_logits, shift_labels)
+        else:
+            shift_logits = logits[0, loss_slice.start-1 : loss_slice.stop-1, :].contiguous()
+            
+            # Check if shift_logits is empty
+            if shift_logits.shape[0] == 0:
+                logger.warning(f"Empty shift_logits. Using full sequence.")
+                shift_logits = logits[0, 0:-1, :].contiguous()
+                shift_labels = context_ids_with_gt[1:].to(device)
+            else:
+                shift_labels = context_ids_with_gt[loss_slice].to(device)
+            
+            total_loss = loss_fct(shift_logits, shift_labels)
+            logger.debug(f"Standard Target Loss: {total_loss.item():.4f}")
     
     # 6. Control Loss
     if control_weight > 0 and control_slice is not None:
@@ -338,10 +422,48 @@ def compute_gradient(
             c_loss = loss_fct(c_logits, c_labels)
             total_loss += control_weight * c_loss
     
-    # 7. Backward
-    total_loss.backward()
+    # 7. Backward with gradient clipping and stability checks
+    # Check for NaN or Inf in loss
+    if torch.isnan(total_loss) or torch.isinf(total_loss):
+        logger.warning(f"Loss is NaN or Inf: {total_loss.item()}. Skipping backward pass.")
+        return torch.zeros_like(one_hot)
     
-    return one_hot.grad.clone()
+    # Clear previous gradients
+    if one_hot.grad is not None:
+        one_hot.grad.zero_()
+    
+    # Backward pass
+    if use_amp and scaler is not None:
+        scaler.scale(total_loss).backward()
+    else:
+        total_loss.backward()
+    
+    # Get gradient
+    grad = one_hot.grad
+    
+    # Check for NaN or Inf in gradient
+    if torch.isnan(grad).any() or torch.isinf(grad).any():
+        logger.warning("Gradient contains NaN or Inf values. Replacing with zeros.")
+        grad = torch.zeros_like(grad)
+    else:
+        # Improved gradient normalization with epsilon for numerical stability
+        grad_norm = grad.norm(dim=-1, keepdim=True)
+        epsilon = 1e-6  # Small epsilon to avoid division by zero
+        
+        # Normalize gradient
+        normalized_grad = grad / (grad_norm + epsilon)
+        
+        # Gradient clipping
+        if grad_clip > 0:
+            normalized_grad = torch.clamp(normalized_grad, -grad_clip, grad_clip)
+        
+        # Replace gradient with normalized version
+        grad = normalized_grad
+        
+        logger.debug(f"Gradient stats: Mean={grad.mean().item():.6f}, Std={grad.std().item():.6f}, "
+                    f"Max={grad.abs().max().item():.6f}, Norm={grad_norm.item():.6f}")
+    
+    return grad.clone()
 
 def select_and_update(
     model,
@@ -430,12 +552,16 @@ def select_and_update(
         # Manually construct context: [Prompt] [Input]
         context_ids = torch.cat([cand_prompt, val_in])
         
+        # Ensure context_ids is 2D for batch processing
+        if context_ids.dim() == 1:
+            context_ids = context_ids.unsqueeze(0)
+        
         gen_ids = generate_reasoning(
             model, tokenizer, input_ids=context_ids, 
             decode=False, return_only_new=True, device=device
         )
-        # gen_ids is [1, New] (batch=1 because we pass 1D)
-        gen_ids = gen_ids[0] 
+        # gen_ids is [1, New] (batch=1)
+        gen_ids = gen_ids[0]  # Extract the single sample 
         
         full_seq = torch.cat([context_ids.to(device), gen_ids.to(device)])
         
